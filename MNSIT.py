@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-def data_initalization(m):
+def data_initalization(m): #Training data initalization
     data_set = pd.read_csv('/Users/raghauvsaravanan/Desktop/Datasets/digit-recognizer/train.csv')
     data_set = np.array(data_set)
     np.random.shuffle(data_set)
@@ -18,7 +18,7 @@ def data_initalization(m):
     
     return x_train, one_hot, labels
 
-def data_test_initalization(m):
+def data_test_initalization(m): #Test data initalization
     data_set = pd.read_csv('/Users/raghauvsaravanan/Desktop/Datasets/digit-recognizer/train.csv')
     data_set = np.array(data_set)
     np.random.shuffle(data_set)
@@ -34,7 +34,7 @@ def data_test_initalization(m):
     
     
 
-def one_hot_encode(labels):
+def one_hot_encode(labels): #Function creates an array with one hot encoding to be used to find loss.
     y_hot = np.zeros((labels.size, 10 ))
     y_hot[np.arange(labels.size),labels] = 1
     y_hot = y_hot.T
@@ -47,18 +47,18 @@ def randomize_paramters(node_size,m):
     b2 = np.zeros((10,m))
     return w1, w2, b1, b2
 
-def reLU(x):
+def reLU(x): #reLu activation function
     return np.maximum(0,x)
 
-def delta_reLU(x):
+def delta_reLU(x): #Deriivative of the reLU activation function
     return (x > 0) * 1
 
-def soft_max(Z):
+def soft_max(Z): #Soft max
     exp = np.exp(Z - np.max(Z))
     return exp / exp.sum(axis=0)
 
 
-def forward(w1,w2,b1,b2,x):
+def forward(w1,w2,b1,b2,x): #Function goes through the neural network and outputs a softmax of the prediction
     z1 = np.dot(w1, x) + b1
     a1 = reLU(z1)
     z2 = np.dot(w2,a1) + b2
@@ -66,7 +66,7 @@ def forward(w1,w2,b1,b2,x):
     
     return z1, a1, a2
 
-def back_prop(a1, a2, z1, w2,one_hot,m,x):
+def back_prop(a1, a2, z1, w2,one_hot,m,x): #function finds the derivative of loss in terms of all the weights and biases
     
     delta_loss = a2 - one_hot
     
@@ -78,14 +78,14 @@ def back_prop(a1, a2, z1, w2,one_hot,m,x):
     
     return dW2, dB2, dW1, dB1
 
-def implement_loss(w1, w2, b1, b2, dW2, dB2, dW1, dB1, learning_rate):
+def implement_loss(w1, w2, b1, b2, dW2, dB2, dW1, dB1, learning_rate): #Function uses learning rate and derivative to find step size for a particular weight or bias
     w1 -= dW1 * learning_rate
     w2 -= dW2 * learning_rate
     b1 -= dB1 * learning_rate
     b2 -= dB2 * learning_rate
     return w1, w2, b1, b2
 
-def terminal():
+def terminal(): #user inputs
     m = int(input("Dataset Size: "))
     hidden_layer = int(input("Hidden Layer Size: "))
     iterations = int(input("Iterations: "))
@@ -96,7 +96,7 @@ def terminal():
 
 
     
-def get_predictions(A2):
+def get_predictions(A2): #Gives the prediction from the nerual network
     return np.argmax(A2,0)
 
 def get_accuracy(predictions, Y):
@@ -107,7 +107,7 @@ def get_accuracy(predictions, Y):
     
         
 
-def gradient_descent(x, one_hot, m, hidden_layer_size, iterations, learning_rate, labels):
+def gradient_descent(x, one_hot, m, hidden_layer_size, iterations, learning_rate, labels): #Where neural network actually learns, loops through however many iterations and adjusts paramters to obtain a higher accuracy
     w1, w2, b1, b2 = randomize_paramters(hidden_layer_size,m)
     
     count = 0
@@ -137,7 +137,7 @@ def test(w1, w2, b1, b2,x,labels,m):
         
 
         
-def image_view(w1, w2, b1, b2, x_test, labels_test,m):
+def image_view(w1, w2, b1, b2, x_test, labels_test,m): #Function used to display images and show predictions/labels
     response = input("Would you like to view images? (y/n)")
     
     if(response=="y"):
@@ -186,25 +186,3 @@ main()
 
 
 
-'''
-def terminal():
-    m = int(input("How large would you like your data set: "))
-    num_hidden_layers = int(input("How many hidden layers would you like? "))
-    hidden_layer_sizes = []
-    for i in range (num_hidden_layers):
-
-        print("Hidden Layer Layer ", i+1)
-        hidden_layer_sizes.append(int(input("What size would you like for this layer? ")))
-        
-    return m, hidden_layer_sizes
-    
-   def arg_max(x):
-    
-    y = np.argmax(x)
-    return y
-
-
-def accuracy(count, m):
-    return (count / m) * 100
-    
-'''   
